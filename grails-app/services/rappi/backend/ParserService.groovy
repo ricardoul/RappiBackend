@@ -8,7 +8,7 @@ class ParserService {
 
 	def parseOperation(rawOperation){
     	def op = rawOperation.split(' ')
-    	return [action: op[0].trim(), values:op[1..op.size()-1]]
+    	return [action: op[0].trim(), values:op[1..op.size()-1].collect{it as Integer}]
 
     }
 
@@ -18,12 +18,12 @@ class ParserService {
 
     def parseStructure(list){
     	def parsedMap = [:]
-    	parsedMap.testCount = list[0] as Long
+    	parsedMap.testCount = list[0] as Integer
     	parsedMap.tests = []
     	def counter = 1
     	for(i in 1..parsedMap.testCount){
     		def partialMap = [:]
-	    	partialMap.matrixSize = list[counter].split(' ')[0].trim()
+	    	partialMap.matrixSize = list[counter].split(' ')[0].trim() as Integer
 	    	partialMap.opCount = (list[counter].split(' ')[1].trim()) as Integer
 	    	counter +=1
 	    	partialMap.operations = list[counter ..counter + (partialMap.opCount -1 )]

@@ -8,14 +8,20 @@ class CubeService {
 
 	def parserService
 	def searchService
+	def validatorService
 
     def calculate(text) {
-    	def parsedStructure= parserService.parseStructure(parserService.parseText(text))
+    	try{
+	    	def parsedStructure= parserService.parseStructure(parserService.parseText(text))
 
-    	for(test in parsedStructure.tests){
-    		executeTest(test)
-    		cleanMatrix()
-    	}
+	    	for(test in parsedStructure.tests){
+	    		validatorService.validate(test)
+	    		executeTest(test)
+	    		cleanMatrix()
+	    	}
+	    }catch(e){
+
+	    }
     }
 
     def cleanMatrix(){
@@ -27,7 +33,6 @@ class CubeService {
     def executeTest(test){
     	for(operation in test.operations){
     		def parsedOp = parserService.parseOperation(operation)
-    		println parsedOp.action
     		if(parsedOp.action == 'QUERY'){
     			def queryRes = searchService.queryObjects(parsedOp)
     			println "resultado query : ${queryRes?.collect{it.val}?.sum()?: 0}"
