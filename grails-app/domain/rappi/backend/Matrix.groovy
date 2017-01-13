@@ -2,9 +2,10 @@ package rappi.backend
 
 class Matrix {
 
-	Integer x
-	Integer y
-	Integer z
+	Long x
+	Long y
+	Long z
+	Long val
 
     static constraints = {
     }
