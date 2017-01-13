@@ -11,17 +11,14 @@ class CubeService {
 	def validatorService
 
     def calculate(text) {
-    	try{
-	    	def parsedStructure= parserService.parseStructure(parserService.parseText(text))
-
-	    	for(test in parsedStructure.tests){
-	    		validatorService.validate(test)
-	    		executeTest(test)
-	    		cleanMatrix()
-	    	}
-	    }catch(e){
-
-	    }
+    	def responseJson = []
+		def parsedStructure= parserService.parseStructure(parserService.parseText(text))
+		for(test in parsedStructure.tests){
+			validatorService.validate(test)
+			responseJson += executeTest(test)
+			cleanMatrix()
+		}
+		return responseJson
     }
 
     def cleanMatrix(){
@@ -31,19 +28,22 @@ class CubeService {
     }
 
     def executeTest(test){
+    	def testResult = []
     	for(operation in test.operations){
     		def parsedOp = parserService.parseOperation(operation)
     		if(parsedOp.action == 'QUERY'){
     			def queryRes = searchService.queryObjects(parsedOp)
-    			println "resultado query : ${queryRes?.collect{it.val}?.sum()?: 0}"
-
+    			def result = queryRes?.collect{it.val}?.sum()?: 0
+    			println "resultado query : ${result}"
+    			testResult += [result: result, op: parsedOp]
     		}else if(parsedOp.action == 'UPDATE'){
-    			createObjects(parsedOp)
+    			createOrUpdateObjects(parsedOp)
     		}
     	}
+    	return testResult
     }
 
-    def createObjects(object){
+    def createOrUpdateObjects(object){
     	def x = object.values[0] as Long
     	def y = object.values[1] as Long
     	def z = object.values[2] as Long

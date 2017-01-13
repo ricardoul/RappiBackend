@@ -33,6 +33,9 @@ class ValidatorService {
 
     def validateQueryOp(op, testData) {
     	validateOverflowValues(op.values, testData)
+    	validateCordPairs(op.values[0],op.values[3]) 	//x
+    	validateCordPairs(op.values[1],op.values[4])	//y
+    	validateCordPairs(op.values[2],op.values[5])	//z
     }
 
     def validateUpdateOp(op, testData) {
@@ -59,7 +62,7 @@ class ValidatorService {
 	}
 
 	def validateCordPairs(cord1, cord2){
-    	if(1 <= cord1 && cord1 <= cord2 && cord2 <= N){
+    	if(MATRIX_MIN_SIZE <= cord1 && cord1 <= cord2 && cord2 <= MATRIX_MAX_SIZE){
     		return true
     	}
     	else{
@@ -68,7 +71,7 @@ class ValidatorService {
 	}
 
     def validateOverflowValues(values, testData){
-    	def findBadValues = values.findAll{it > testData.matrixSize || it < 1}
+    	def findBadValues = values.findAll{it > testData.matrixSize || it < MATRIX_MIN_SIZE}
     	if(findBadValues.size() >0){
     		throw new Exception("Value overflow matrix ${findBadValues} matrixSize: ${testData.matrixSize}")
     	}
